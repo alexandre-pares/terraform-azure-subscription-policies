@@ -24,6 +24,7 @@ module "subscriptions_policies" {
   enable_all_users_to_transfer_out  = false
   bypass_user_list = [ ]
 }
+```
 
 # Requirements
 
