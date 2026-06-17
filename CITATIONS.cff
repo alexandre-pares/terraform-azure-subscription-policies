@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+title: Azure Subscription Policies Terraform module for Microsoft Azure
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - orcid: "https://orcid.org/0009-0002-1956-1126"
+    given-names: Alexandre
+    family-names: PARÈS
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.20584701
+repository-code: >-
+  https://github.com/alexandre-pares/terraform-azure-subscription-policies
+repository-artifact: >-
+  https://registry.terraform.io/modules/alexandre-pares/subscription-policies/azure/latest
+abstract: >-
+  Terraform module to manage Azure Subscription Policies, including transfer in or out and bypass user list.
+keywords:
+  - terraform
+  - terraform-modules
+  - azure
+  - azapi
+  - azure-subscription
+  - azure-subscription-policies
+license: Apache-2.0
