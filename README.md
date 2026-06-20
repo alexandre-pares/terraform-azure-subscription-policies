@@ -15,7 +15,7 @@ Learn more: https://aka.ms/subPolicy
 Detailed examples are available under the [`./examples`](./examples/) directory.
 
 ```hcl
-module "subscriptions_policies" {
+module "subscription_policies" {
   source  = "alexandre-pares/subscription-policies/azure"
   version = "1.0.0"
 
@@ -29,6 +29,66 @@ module "subscriptions_policies" {
 # Requirements
 
 Per [Microsoft documentation](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/manage-azure-subscription-policy#prerequisites), only [Global Administrators](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#global-administrator) can edit subscription policies. Other users can read the current subscription policy setting.
+
+If you are using a managed identity (e.g. UAMI for GitHub Action), you will need to add the elevated role assignment to the identity:
+
+1. Find the object ID of your user-assigned managed identity (not the client id)
+2. Using an account with elevated access, run the following command:
+
+```bash
+# Replace with the Object ID of your user-assigned managed identity
+uami_object_id="replace_me"
+
+# Grant elevetated access (User Access Administrator) to your user-assigned managed identity
+az role assignment create --scope "/" --role "User Access Administrator" --assignee $uami_object_id
+```
+
+3. Run your Terraform pipeline
+4. Remove the elevated access. Using an account with elevated access, run the following command:
+
+```bash
+# Remove the elevated access
+az role assignment delete --scope "/" --role "User Access Administrator" --assignee $uami_object_id
+```
+
+# Common errors
+
+## User doesn't have 'UserAccessAdministrator' role at root scope (/)
+
+As mentionned in the requirements above, you need to grant elevated access to the identity execuring the Terraform module.
+
+If you're using your own account (not recommended), you need to elevate your access by following [this procedure](https://learn.microsoft.com/en-us/azure/role-based-access-control/elevate-access-global-admin).
+
+If you're using a managed identity (recommended), you can follow the procedure mentionned above (requirements) to assign, execute and then remove the elevated access.
+
+```bash
+╷
+│ Error: Failed to update resource
+│
+│   with module.subscription_policy.azapi_update_resource.this,
+│   on .terraform/modules/subscription_policy/main.tf line 3, in resource "azapi_update_resource" "this":
+│    3: resource "azapi_update_resource" "this" {
+│
+│ updating "Resource: (ResourceId
+│ \"/providers/Microsoft.Subscription/policies/default\" / Api Version
+│ \"2025-11-01-preview\")": PUT
+│ https://management.azure.com/providers/Microsoft.Subscription/policies/default
+│ --------------------------------------------------------------------------------
+│ RESPONSE 401: 401 Unauthorized
+│ ERROR CODE: UserNotAuthorized
+│ --------------------------------------------------------------------------------
+│ {
+│   "error": {
+│     "code": "UserNotAuthorized",
+│     "message": "User doesn't have 'UserAccessAdministrator' role at root scope (/)"
+│   },
+│   "code": "UserNotAuthorized",
+│   "message": "User doesn't have 'UserAccessAdministrator' role at root scope (/)"
+│ }
+│ --------------------------------------------------------------------------------
+│
+╵
+```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

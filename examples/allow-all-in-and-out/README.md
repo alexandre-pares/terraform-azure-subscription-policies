@@ -10,12 +10,12 @@
 data "azapi_client_config" "current" {
 }
 
-module "suscriptions_policies" {
+module "suscription_policies" {
   source = "../.."
 
   # Allow all users
-  enable_all_users_to_transfer_in = true
-  enable_all_users_to_transfer_out = true
+  enable_all_users_to_transfer_in   = true
+  enable_all_users_to_transfer_out  = true
 
   # Empty user list
   bypass_user_list = [ ]
