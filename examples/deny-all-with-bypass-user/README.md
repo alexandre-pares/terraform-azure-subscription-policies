@@ -11,12 +11,12 @@ This examples assumes that the Terraform script is executed using an user accoun
 data "azapi_client_config" "current" {
 }
 
-module "suscriptions_policies" {
+module "suscription_policies" {
   source = "../.."
 
   # Deny all
-  enable_all_users_to_transfer_in = false
-  enable_all_users_to_transfer_out = false
+  enable_all_users_to_transfer_in   = false
+  enable_all_users_to_transfer_out  = false
 
   # Add current user Object ID to the bypass list
   bypass_user_list = [ data.azapi_client_config.current.object_id ]
